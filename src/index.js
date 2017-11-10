@@ -7,6 +7,8 @@ const { getDirRule, processSrcRule } = require( './rules' )
 const { rtlifyDecl, ltrifyDecl } = require( './decls' )
 const { isSelectorHasDir } = require( './selectors' )
 
+let __keyframes = []
+
 module.exports = postcss.plugin( 'postcss-rtl', ( options ) => css => {
 
     let keyframes = []
@@ -62,6 +64,12 @@ module.exports = postcss.plugin( 'postcss-rtl', ( options ) => css => {
         keyframes.push( rule.params )
         rtlifyKeyframe( rule )
     } )
+
+    if ( keyframes.length ) {
+        __keyframes = __keyframes.concat( keyframes )
+    } else {
+        keyframes = __keyframes
+    }
 
     // Simple rules (includes rules inside @media-queries)
     css.walk( node => {
